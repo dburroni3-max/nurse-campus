@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NurseCampus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --blu: #15324b;
+      --verde: #087e8b;
+      --menta: #44bba4;
+      --corallo: #ed6a5a;
+      --sfondo: #f4f9f8;
+      --testo: #173042;
+      --grigio: #687b85;
+      --bordo: #dce9e8;
+      --bianco: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", Arial, sans-serif;
+      background: var(--sfondo);
+      color: var(--testo);
+    }
+
+    header {
+      background: var(--blu);
+      color: white;
+      padding: 24px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-family: "Outfit", sans-serif;
+    }
+
+    header h1 span {
+      color: var(--menta);
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #c3dce0;
+      font-size: 13px;
+    }
+
+    nav {
+      background: white;
+      padding: 12px 8%;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--bordo);
+    }
+
+    nav button {
+      border: none;
+      background: #eef7f6;
+      color: var(--verde);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav button:hover,
+    nav button.attivo {
+      background: var(--verde);
+      color: white;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 18px 60px;
+    }
+
+    .pagina {
+      display: none;
+    }
+
+    .pagina.attiva {
+      display: block;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      min-height: 290px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #dff5f2;
+      margin-bottom: 25px;
+    }
+
+    .hero-testo {
+      padding: 40px;
+    }
+
+    .etichetta {
+      color: var(--verde);
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .hero h2 {
+      font-family: "Outfit", sans-serif;
+      font-size: 35px;
+      margin: 12px 0;
+    }
+
+    .hero h2 span {
+      color: var(--corallo);
+    }
+
+    .hero p {
+      color: #48636d;
+      line-height: 1.5;
+    }
+
+    .hero-immagine {
+      background:
+        linear-gradient(rgba(8, 126, 139, 0.12), rgba(8, 126, 139, 0.12)),
+        url("https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .griglia {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bianco);
+      border: 1px solid var(--bordo);
+      padding: 22px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-family: "Outfit", sans-serif;
+      margin-top: 0;
+      color: var(--blu);
+    }
+
+    .card p {
+      line-height: 1.5;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      margin: 6px 0 15px;
+      padding: 12px;
+      border: 1px solid var(--bordo);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .bottone {
+      background: var(--verde);
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .bottone:hover {
+      background: #05646e;
+    }
+
+    .elimina {
+      background: #fff0ee;
+      color: #c04c40;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .esame,
+    .attivita,
+    .nota,
+    .flashcard {
+      border: 1px solid var(--bordo);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 12px;
+      background: #fcfefe;
+    }
+
+    .riga {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .esame h3,
+    .nota h3 {
+      margin: 0 0 7px;
+      font-family: "Outfit", sans-serif;
+    }
+
+    .piccolo {
+      color: var(--grigio);
+      font-size: 12px;
+    }
+
+    .barra {
+      height: 8px;
+      background: #e7eeee;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .barra div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--verde), var(--menta));
+    }
+
+    .attivita {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .attivita input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--menta);
+    }
+
+    .attivita span {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .completata span {
+      text-decoration: line-through;
+      color: var(--grigio);
+    }
+
+    .flashcard {
+      background: linear-gradient(145deg, #eaf8f6, #ffffff);
+    }
+
+    .flashcard strong {
+      color: var(--verde);
+    }
+
+    .risposta {
+      color: var(--verde);
+      font-weight: bold;
+    }
+
+    .timer {
+      text-align: center;
+      background: var(--blu);
+      color: white;
+    }
+
+    #tempo {
+      font-family: "Outfit", sans-serif;
+      font-size: 58px;
+      margin: 15px 0;
+    }
+
+    .timer button {
+      margin: 3px;
+    }
+
+    .risorse {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .risorsa {
+      text-decoration: none;
+      color: var(--testo);
+      border: 1px solid var(--bordo);
+      padding: 16px;
+      border-radius: 12px;
+      background: #fbfefe;
+    }
+
+    .risorsa:hover {
+      border-color: var(--menta);
+    }
+
+    .risorsa strong {
+      display: block;
+      margin: 8px 0 4px;
+      color: var(--verde);
+    }
+
+    .avviso {
+      background: #fff7e9;
+      color: #755728;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 700px) {
+      header {
+        display: block;
+      }
+
+      nav {
+        padding: 12px 18px;
+      }
+
+      .hero,
+      .griglia,
+      .risorse {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-immagine {
+        min-height: 180px;
+      }
+
+      .hero h2 {
+        font-size: 29px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div>
+      <h1>Nurse<span>Campus</span></h1>
+      <p>Studio, esami e tirocinio per studenti infermieri.</p>
+    </div>
+  </header>
+
+  <nav>
+    <button class="attivo" onclick="apriPagina('home', this)">⌂ Oggi</button>
+    <button onclick="apriPagina('esami', this)">▣ Esami</button>
+    <button onclick="apriPagina('studio', this)">◫ Studio</button>
+    <button onclick="apriPagina('tirocinio', this)">✚ Tirocinio</button>
+    <button onclick="apriPagina('risorse', this)">◌ Risorse</button>
+  </nav>
+
+  <main>
+    <section id="home" class="pagina attiva">
+      <div class="hero">
+        <div class="hero-testo">
+          <div class="etichetta">NURSECAMPUS</div>
+
+          <h2>
+            Studia con metodo.<br>
+            <span>Cresci con fiducia.</span>
+          </h2>
+
+          <p>
+            Un solo spazio per organizzare esami, ripassi,
+            flashcard e riflessioni sul tirocinio.
+          </p>
+
+          <button class="bottone" onclick="apriPagina('studio')">
+            Inizia il ripasso →
+          </button>
+        </div>
+
+        <div class="hero-immagine"></div>
+      </div>
+
+      <div class="griglia">
+        <section class="card">
+          <div class="etichetta">OGGI</div>
+          <h2>Il tuo piano</h2>
+          <div id="attivita-home"></div>
+        </section>
+
+        <section class="card timer">
+          <div class="etichetta" style="color:#8de1d0">FOCUS SESSION</div>
+          <div id="tempo">25:00</div>
+          <p>Una sessione alla volta.</p>
+
+          <button class="bottone" onclick="avviaTimer()">Avvia</button>
+          <button class="bottone" onclick="pausaTimer()">Pausa</button>
+          <button class="bottone" onclick="resetTimer()">Reset</button>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="etichetta">SEMESTRE</div>
+        <h2>I miei esami</h2>
+        <div id="esami-home"></div>
+      </section>
+    </section>
+
+    <section id="esami" class="pagina">
+      <section class="card">
+        <div class="etichetta">NUOVO ESAME</div>
+        <h2>Aggiungi un esame</h2>
+
+        <label>Nome dell’esame</label>
+        <input id="nome-esame" placeholder="Es. Anatomia umana">
+
+        <label>Data dell’esame</label>
+        <input id="data-esame" type="date">
+
+        <label>
+          Preparazione: <span id="numero-progresso">0</span>%
+        </label>
+        <input id="progresso-esame" type="range" min="0" max="100" value="0">
+
+        <button class="bottone" onclick="aggiungiEsame()">
+          Salva esame
+        </button>
+      </section>
+
+      <section class="card">
+        <div class="etichetta">PREPARAZIONE</div>
+        <h2>I tuoi esami</h2>
+        <div id="lista-esami"></div>
+      </section>
+    </section>
+
+    <section id="studio" class="pagina">
+      <div class="griglia">
+        <section class="card">
+          <div class="etichetta">PIANO DI STUDIO</div>
+          <h2>Attività di oggi</h2>
+
+          <input
+            id="nuova-attivita"
+            placeholder="Es. Ripassare il sistema cardiovascolare"
+          >
+
+          <button class="bottone" onclick="aggiungiAttivita()">
+            Aggiungi attività
+          </button>
+
+          <div id="lista-attivita"></div>
+        </section>
+
+        <section class="card">
+          <div class="etichetta">FLASHCARD</div>
+          <h2>Impara e ripeti</h2>
+
+          <input
+            id="domanda-flashcard"
+            placeholder="Domanda, es. Funzione degli alveoli?"
+          >
+
+          <input
+            id="risposta-flashcard"
+            placeholder="Risposta, es. Scambi gassosi"
+          >
+
+          <button class="bottone" onclick="aggiungiFlashcard()">
+            Aggiungi flashcard
+          </button>
+
+          <div id="lista-flashcard"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="tirocinio" class="pagina">
+      <section class="card">
+        <div class="etichetta">DIARIO DI TIROCINIO</div>
+        <h2>Rifletti sulle tue esperienze</h2>
+
+        <label>Data</label>
+        <input id="data-tirocinio" type="date">
+
+        <label>Area o reparto</label>
+        <input id="area-tirocinio" placeholder="Es. Medicina interna">
+
+        <label>Cosa hai imparato?</label>
+        <textarea
+          id="nota-tirocinio"
+          placeholder="Es. Ho osservato la valutazione del dolore e riflettuto sulla comunicazione con la persona assistita."
+        ></textarea>
+
+        <button class="bottone" onclick="aggiungiNota()">
+          Salva nel diario
+        </button>
+      </section>
+
+      <section class="card">
+        <div class="etichetta">LE TUE ESPERIENZE</div>
+        <h2>Diario salvato</h2>
+        <div id="lista-tirocinio"></div>
+
+        <div class="avviso">
+          <strong>Attenzione:</strong> non inserire mai nomi,
+          diagnosi identificabili, date di nascita o altri dati personali dei pazienti.
+        </div>
+      </section>
+    </section>
+
+    <section id="risorse" class="pagina">
+      <section class="card">
+        <div class="etichetta">FONTI AFFIDABILI</div>
+        <h2>Riferimenti per lo studio infermieristico</h2>
+
+        <div class="risorse">
+          <a
+            class="risorsa"
+            href="https://www.fnopi.it/norme-e-codici/deontologia/"
+            target="_blank"
+          >
+            ⚖
+            <strong>FNOPI</strong>
+            Codice deontologico e approfondimenti per la professione infermieristica.
+          </a>
+
+          <a
+            class="risorsa"
+            href="https://www.who.int/teams/integrated-health-services/patient-safety/guidance/curriculum-guide-tools/resources"
+            target="_blank"
+          >
+            ◈
+            <strong>OMS</strong>
+            Materiali didattici sulla sicurezza del paziente.
+          </a>
+
+          <a
+            class="risorsa"
+            href="https://www.icn.ch/resources/publications-and-reports/icn-code-ethics-nurses"
+            target="_blank"
+          >
+            ◎
+            <strong>ICN</strong>
+            Codice etico internazionale per gli infermieri.
+          </a>
+        </div>
+
+        <div class="avviso">
+          <strong>Uso didattico:</strong> NurseCampus è pensata per studiare.
+          Per procedure e decisioni cliniche segui sempre tutor, protocolli della struttura
+          e fonti aggiornate.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    let esami = JSON.parse(localStorage.getItem("esami")) || [
+      {
+        nome: "Anatomia umana",
+        data: "2026-10-05",
+        progresso: 62
+      }
+    ];
+
+    let attivita = JSON.parse(localStorage.getItem("attivita")) || [
+      {
+        testo: "Ripassare il sistema cardiovascolare",
+        completata: false
+      },
+      {
+        testo: "Completare 15 quiz di fisiologia",
+        completata: false
+      }
+    ];
+
+    let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [
+      {
+        domanda: "Qual è la funzione principale degli alveoli?",
+        risposta: "Permettere gli scambi gassosi tra aria e sangue."
+      }
+    ];
+
+    let diario = JSON.parse(localStorage.getItem("diario")) || [];
+
+    let slider = document.getElementById("progresso-esame");
+
+    slider.addEventListener("input", function () {
+      document.getElementById("numero-progresso").textContent = slider.value;
+    });
+
+    function salvaDati() {
+      localStorage.setItem("esami", JSON.stringify(esami));
+      localStorage.setItem("attivita", JSON.stringify(attivita));
+      localStorage.setItem("flashcards", JSON.stringify(flashcards));
+      localStorage.setItem("diario", JSON.stringify(diario));
+    }
+
+    function apriPagina(nomePagina, bottone) {
+      let pagine = document.querySelectorAll(".pagina");
+
+      for (let pagina of pagine) {
+        pagina.classList.remove("attiva");
+      }
+
+      document.getElementById(nomePagina).classList.add("attiva");
+
+      let bottoni = document.querySelectorAll("nav button");
+
+      for (let bottoneNav of bottoni) {
+        bottoneNav.classList.remove("attivo");
+      }
+
+      if (bottone) {
+        bottone.classList.add("attivo");
+      }
+
+      window.scrollTo(0, 0);
+    }
+
+    function formattaData(data) {
+      return new Date(data + "T12:00:00").toLocaleDateString("it-IT");
+    }
+
+    function aggiungiEsame() {
+      let nome = document.getElementById("nome-esame").value;
+      let data = document.getElementById("data-esame").value;
+      let progresso = document.getElementById("progresso-esame").value;
+
+      if (nome === "" || data === "") {
+        alert("Inserisci nome e data dell'esame.");
+        return;
+      }
+
+      esami.push({
+        nome: nome,
+        data: data,
+        progresso: progresso
+      });
+
+      salvaDati();
+
+      document.getElementById("nome-esame").value = "";
+      document.getElementById("data-esame").value = "";
+      document.getElementById("progresso-esame").value = 0;
+      document.getElementById("numero-progresso").textContent = "0";
+
+      mostraEsami();
+    }
+
+    function mostraEsami() {
+      let lista = document.getElementById("lista-esami");
+      let home = document.getElementById("esami-home");
+
+      lista.innerHTML = "";
+      home.innerHTML = "";
+
+      for (let indice = 0; indice < esami.length; indice++) {
+        let esame = esami[indice];
+
+        let codice = `
+          <div class="esame">
+            <div class="riga">
+              <h3>${esame.nome}</h3>
+
+              <button class="elimina" onclick="eliminaEsame(${indice})">
+                Elimina
+              </button>
+            </div>
+
+            <div class="piccolo">
+              Esame il ${formattaData(esame.data)}
+            </div>
+
+            <div class="barra">
+              <div style="width: ${esame.progresso}%"></div>
+            </div>
+
+            <div class="piccolo">
+              Preparazione: ${esame.progresso}%
+            </div>
+          </div>
+        `;
+
+        lista.innerHTML += codice;
+        home.innerHTML += codice;
+      }
+    }
+
+    function eliminaEsame(indice) {
+      esami.splice(indice, 1);
+      salvaDati();
+      mostraEsami();
+    }
+
+    function aggiungiAttivita() {
+      let testo = document.getElementById("nuova-attivita").value;
+
+      if (testo === "") {
+        alert("Scrivi un'attività.");
+        return;
+      }
+
+      attivita.push({
+        testo: testo,
+        completata: false
+      });
+
+      salvaDati();
+
+      document.getElementById("nuova-attivita").value = "";
+
+      mostraAttivita();
+    }
+
+    function mostraAttivita() {
+      let lista = document.getElementById("lista-attivita");
+      let home = document.getElementById("attivita-home");
+
+      lista.innerHTML = "";
+      home.innerHTML = "";
+
+      for (let indice = 0; indice < attivita.length; indice++) {
+        let voce = attivita[indice];
+
+        let stato = voce.completata ? "completata" : "";
+        let selezionata = voce.completata ? "checked" : "";
+
+        let codice = `
+          <div class="attivita ${stato}">
+            <input
+              type="checkbox"
+              ${selezionata}
+              onchange="completaAttivita(${indice})"
+            >
+
+            <span>${voce.testo}</span>
+
+            <button class="elimina" onclick="eliminaAttivita(${indice})">
+              Elimina
+            </button>
+          </div>
+        `;
+
+        lista.innerHTML += codice;
+        home.innerHTML += codice;
+      }
+    }
+
+    function completaAttivita(indice) {
+      attivita[indice].completata = !attivita[indice].completata;
+      salvaDati();
+      mostraAttivita();
+    }
+
+    function eliminaAttivita(indice) {
+      attivita.splice(indice, 1);
+      salvaDati();
+      mostraAttivita();
+    }
+
+    function aggiungiFlashcard() {
+      let domanda = document.getElementById("domanda-flashcard").value;
+      let risposta = document.getElementById("risposta-flashcard").value;
+
+      if (domanda === "" || risposta === "") {
+        alert("Inserisci domanda e risposta.");
+        return;
+      }
+
+      flashcards.push({
+        domanda: domanda,
+        risposta: risposta
+      });
+
+      salvaDati();
+
+      document.getElementById("domanda-flashcard").value = "";
+      document.getElementById("risposta-flashcard").value = "";
+
+      mostraFlashcards();
+    }
+
+    function mostraFlashcards() {
+      let lista = document.getElementById("lista-flashcard");
+
+      lista.innerHTML = "";
+
+      for (let indice = 0; indice < flashcards.length; indice++) {
+        let card = flashcards[indice];
+
+        lista.innerHTML += `
+          <div class="flashcard">
+            <strong>Domanda</strong>
+            <p>${card.domanda}</p>
+
+            <button class="bottone" onclick="mostraRisposta(${indice})">
+              Mostra risposta
+            </button>
+
+            <button class="elimina" onclick="eliminaFlashcard(${indice})">
+              Elimina
+            </button>
+
+            <p class="risposta" id="risposta-${indice}"></p>
+          </div>
+        `;
+      }
+    }
+
+    function mostraRisposta(indice) {
+      document.getElementById("risposta-" + indice).textContent =
+        "Risposta: " + flashcards[indice].risposta;
+    }
+
+    function eliminaFlashcard(indice) {
+      flashcards.splice(indice, 1);
+      salvaDati();
+      mostraFlashcards();
+    }
+
+    function aggiungiNota() {
+      let data = document.getElementById("data-tirocinio").value;
+      let area = document.getElementById("area-tirocinio").value;
+      let nota = document.getElementById("nota-tirocinio").value;
+
+      if (data === "" || area === "" || nota === "") {
+        alert("Compila tutti i campi.");
+        return;
+      }
+
+      diario.unshift({
+        data: data,
+        area: area,
+        nota: nota
+      });
+
+      salvaDati();
+
+      document.getElementById("data-tirocinio").value = "";
+      document.getElementById("area-tirocinio").value = "";
+      document.getElementById("nota-tirocinio").value = "";
+
+      mostraDiario();
+    }
+
+    function mostraDiario() {
+      let lista = document.getElementById("lista-tirocinio");
+
+      lista.innerHTML = "";
+
+      for (let indice = 0; indice < diario.length; indice++) {
+        let voce = diario[indice];
+
+        lista.innerHTML += `
+          <div class="nota">
+            <div class="riga">
+              <h3>${voce.area}</h3>
+
+              <button class="elimina" onclick="eliminaNota(${indice})">
+                Elimina
+              </button>
+            </div>
+
+            <div class="piccolo">${formattaData(voce.data)}</div>
+            <p>${voce.nota}</p>
+          </div>
+        `;
+      }
+    }
+
+    function eliminaNota(indice) {
+      diario.splice(indice, 1);
+      salvaDati();
+      mostraDiario();
+    }
+
+    let secondi = 25 * 60;
+    let timerAttivo = null;
+
+    function aggiornaTimer() {
+      let minuti = Math.floor(secondi / 60);
+      let restanti = secondi % 60;
+
+      if (restanti < 10) {
+        restanti = "0" + restanti;
+      }
+
+      document.getElementById("tempo").textContent =
+        minuti + ":" + restanti;
+    }
+
+    function avviaTimer() {
+      if (timerAttivo) {
+        return;
+      }
+
+      timerAttivo = setInterval(function () {
+        secondi--;
+
+        aggiornaTimer();
+
+        if (secondi <= 0) {
+          pausaTimer();
+          alert("Sessione completata. Ottimo lavoro!");
+        }
+      }, 1000);
+    }
+
+    function pausaTimer() {
+      clearInterval(timerAttivo);
+      timerAttivo = null;
+    }
+
+    function resetTimer() {
+      pausaTimer();
+      secondi = 25 * 60;
+      aggiornaTimer();
+    }
+
+    mostraEsami();
+    mostraAttivita();
+    mostraFlashcards();
+    mostraDiario();
+    aggiornaTimer();
+  </script>
+</body>
+</html>
